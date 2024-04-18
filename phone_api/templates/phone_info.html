@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о номере телефона</title>
+</head>
+<body>
+    <h1>Информация о номере телефона</h1>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% else %}
+        <p><strong>Номер:</strong> +7{{ phone }}</p>
+        <p><strong>Оператор:</strong> {{ operator }}</p>
+        <p><strong>Регион:</strong> {{ region }}</p>
+        <p><strong>(ГАР) Регион:</strong> {{ gar_territory }}</p>
+        <p><strong>ИНН ОПЕРАТОРА:</strong> {{ inn }}</p>
+    {% endif %}
+</body>
+</html>

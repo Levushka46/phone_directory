@@ -30,7 +30,6 @@ def process_url(url):
     global PhoneModel
     file_path = download_file(url)
     updatedb(file_path, PhoneModel)
-
     print(f"{url} completed")
 
 
@@ -84,7 +83,3 @@ def download_all():
 
     if PhoneModel is UpdatePhoneNumber:
         apply_updates()
-        print(f"{url} completed upd")
-
-
-download_all()

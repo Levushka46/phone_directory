@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     "phonedb",
+    "phone_api",
 ]
 
 MIDDLEWARE = [
@@ -76,8 +79,12 @@ WSGI_APPLICATION = "phone_directory.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "phone_directory_db",
+        "USER": "phone_directory",
+        "PASSWORD": "12345",
+        "HOST": "db",
+        "PORT": "5432",
     }
 }
 
@@ -122,3 +129,33 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Celery settings
+# CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+# CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_TASK_TRACK_STARTED = True
+
+# Настройки Celery Beat
+CELERY_BEAT_SCHEDULE = {
+    "run-task-on-startup": {
+        "task": "phonedb.tasks.update_db",
+        "schedule": timedelta(seconds=20),
+        "options": {"expires": 25},
+    },
+    "run-task-every-day": {
+        "task": "phonedb.tasks.update_db",
+        "schedule": 86400,
+    },
+}
+
+ADMINS = (
+    # ('Your Name', 'your_email@domain.com'),
+    ("admin", "admin@mysite.com"),
+)
+ADMIN_USERNAME = "admin"
+ADMIN_EMAIL = "admin@mysite.com"
+ADMIN_INITIAL_PASSWORD = "admin"  # To be changed after first login by admin
+
+SITE_ID = 1
